@@ -1,8 +1,20 @@
 A package to create and use Google Maps marker with label text; the easiest and most efficient way.
+<p align="center">
+  <a href="https://pub.dartlang.org/packages/equatable">
+    <img alt="Pub Package" src="https://img.shields.io/badge/version-0.0.1-green">
+  </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-blue.svg">
+  </a>
+</p>
 
 ## Features
-<img src="assets/label_marker.jpg" width="100%" alt="logo" />
+<p align = "center">
+<img src="assets/label_marker.jpg" width="80%" alt="logo" />
+    </p>
+    
 Use this app in your Flutter app to:
+
 * Include marker with text in flutter app
 * Customise the background colour of the label
 * Customise the font style of the label
@@ -20,9 +32,9 @@ Use this app in your Flutter app to:
 
 ```
 markers.addLabelMarker(LabelMarker(
-    label: title,
-    markerId: MarkerId(title),
-    position: LatLng(lat, lng),
+    label: "TextToShow",
+    markerId: MarkerId("idString"),
+    position: LatLng(10.0, 11.0),
     backgroundColor: Colors.green,
     )).then((value) {
     setState(() {});
