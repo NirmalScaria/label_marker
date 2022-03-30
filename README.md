@@ -1,7 +1,7 @@
 A package to create and use Google Maps marker with label text; the easiest and most efficient way.
 
 ## Features
-
+<img src="assets/label_marker.jpg" width="100%" alt="logo" />
 Use this app in your Flutter app to:
 * Include marker with text in flutter app
 * Customise the background colour of the label
