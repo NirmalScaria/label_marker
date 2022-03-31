@@ -10,7 +10,7 @@ A package to create and use Google Maps marker with label text; the easiest and 
 
 ## Features
 <p align = "center">
-<img src="assets/label_marker.jpg" width="80%" alt="logo" />
+<img src="https://github.com/NirmalScaria/label_marker/blob/main/assets/label_marker.jpg?raw=true" width="80%" alt="logo" />
     </p>
     
 Use this app in your Flutter app to:
