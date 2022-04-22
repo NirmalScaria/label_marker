@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Label Marker example', 
+      title: 'Label Marker example',
       home: MyHomePage(title: 'Label Marker Example'),
     );
   }
