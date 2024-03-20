@@ -28,6 +28,7 @@ extension AddExtension on Set<Marker> {
       labelMarker.label,
       backgroundColor: labelMarker.backgroundColor,
       textStyle: labelMarker.textStyle,
+      removePointyTriangle: labelMarker.removePointyTriangle,
     ).then((value) {
       add(Marker(
           markerId: labelMarker.markerId,
@@ -52,9 +53,12 @@ extension AddExtension on Set<Marker> {
   }
 }
 
-Future<BitmapDescriptor> createCustomMarkerBitmap(String title,
-    {required TextStyle textStyle,
-    Color backgroundColor = Colors.blueAccent}) async {
+Future<BitmapDescriptor> createCustomMarkerBitmap(
+  String title, {
+  required TextStyle textStyle,
+  Color backgroundColor = Colors.blueAccent,
+  bool removePointyTriangle = false,
+}) async {
   TextSpan span = TextSpan(
     style: textStyle,
     text: title,
@@ -81,12 +85,14 @@ Future<BitmapDescriptor> createCustomMarkerBitmap(String title,
           topLeft: const Radius.circular(10),
           topRight: const Radius.circular(10)),
       Paint()..color = backgroundColor);
-  var arrowPath = Path();
-  arrowPath.moveTo((textWidth + 40) / 2 - 15, textHeight + 20);
-  arrowPath.lineTo((textWidth + 40) / 2, textHeight + 40);
-  arrowPath.lineTo((textWidth + 40) / 2 + 15, textHeight + 20);
-  arrowPath.close();
-  canvas.drawPath(arrowPath, Paint()..color = backgroundColor);
+  if (!removePointyTriangle) {
+    var arrowPath = Path();
+    arrowPath.moveTo((textWidth + 40) / 2 - 15, textHeight + 20);
+    arrowPath.lineTo((textWidth + 40) / 2, textHeight + 40);
+    arrowPath.lineTo((textWidth + 40) / 2 + 15, textHeight + 20);
+    arrowPath.close();
+    canvas.drawPath(arrowPath, Paint()..color = backgroundColor);
+  }
   painter.layout();
   painter.paint(canvas, const Offset(20.0, 10.0));
   ui.Picture p = pictureRecorder.endRecording();
@@ -170,6 +176,9 @@ class LabelMarker {
   /// Signature reporting the new [LatLng] during the drag event.
   final ValueChanged<LatLng>? onDrag;
 
+  /// An option to remove pointy from label
+  final bool removePointyTriangle;
+
   /// Creates a marker with text label
   ///
   /// * Pass the [label] to be displayed on the marker
@@ -204,5 +213,6 @@ class LabelMarker {
     this.onDrag,
     this.onDragStart,
     this.onDragEnd,
+    this.removePointyTriangle = false,
   });
 }
