@@ -1,27 +1,12 @@
-/// A widget to create markers with text label on Google Maps
 library label_marker;
 
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:ui' as ui;
 
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 extension AddExtension on Set<Marker> {
-  /// Add a LabelMarker to existing set of Markers
-  ///
-  /// * Pass the [LabelMarker] object to add to the set
-  /// * !!! IMPORTANT!!!
-  /// *   Call setstate after calling this function, as shown in the example
-  ///
-  /// Example
-  ///
-  ///       markers.addLabelMarker(LabelMarker(
-  ///         label: "makerLabel",
-  ///         markerId: MarkerId("markerIdString"),
-  ///         position: LatLng(11.1203, 45.33),),
-  ///       ).then((_) {
-  ///          setState(() {});
-  ///      });
   Future<bool> addLabelMarker(LabelMarker labelMarker) async {
     bool result = false;
     await createCustomMarkerBitmap(
@@ -29,24 +14,26 @@ extension AddExtension on Set<Marker> {
       backgroundColor: labelMarker.backgroundColor,
       textStyle: labelMarker.textStyle,
       removePointyTriangle: labelMarker.removePointyTriangle,
+      borderRadius: labelMarker.borderRadius,
     ).then((value) {
       add(Marker(
-          markerId: labelMarker.markerId,
-          position: labelMarker.position,
-          icon: value,
-          alpha: labelMarker.alpha,
-          anchor: labelMarker.anchor,
-          consumeTapEvents: labelMarker.consumeTapEvents,
-          draggable: labelMarker.draggable,
-          flat: labelMarker.flat,
-          infoWindow: labelMarker.infoWindow,
-          rotation: labelMarker.rotation,
-          visible: labelMarker.visible,
-          zIndex: labelMarker.zIndex,
-          onTap: labelMarker.onTap,
-          onDragStart: labelMarker.onDragStart,
-          onDrag: labelMarker.onDrag,
-          onDragEnd: labelMarker.onDragEnd));
+        markerId: labelMarker.markerId,
+        position: labelMarker.position,
+        icon: value,
+        alpha: labelMarker.alpha,
+        anchor: labelMarker.anchor,
+        consumeTapEvents: labelMarker.consumeTapEvents,
+        draggable: labelMarker.draggable,
+        flat: labelMarker.flat,
+        infoWindow: labelMarker.infoWindow,
+        rotation: labelMarker.rotation,
+        visible: labelMarker.visible,
+        zIndex: labelMarker.zIndex,
+        onTap: labelMarker.onTap,
+        onDragStart: labelMarker.onDragStart,
+        onDrag: labelMarker.onDrag,
+        onDragEnd: labelMarker.onDragEnd,
+      ));
       result = true;
     });
     return (result);
@@ -58,6 +45,7 @@ Future<BitmapDescriptor> createCustomMarkerBitmap(
   required TextStyle textStyle,
   Color backgroundColor = Colors.blueAccent,
   bool removePointyTriangle = false,
+  double borderRadius = 10.0,
 }) async {
   TextSpan span = TextSpan(
     style: textStyle,
@@ -79,12 +67,18 @@ Future<BitmapDescriptor> createCustomMarkerBitmap(
   int textWidth = painter.width.toInt();
   int textHeight = painter.height.toInt();
   canvas.drawRRect(
-      RRect.fromLTRBAndCorners(0, 0, textWidth + 40, textHeight + 20,
-          bottomLeft: const Radius.circular(10),
-          bottomRight: const Radius.circular(10),
-          topLeft: const Radius.circular(10),
-          topRight: const Radius.circular(10)),
-      Paint()..color = backgroundColor);
+    RRect.fromLTRBAndCorners(
+      0,
+      0,
+      textWidth + 40,
+      textHeight + 20,
+      bottomLeft: Radius.circular(borderRadius),
+      bottomRight: Radius.circular(borderRadius),
+      topLeft: Radius.circular(borderRadius),
+      topRight: Radius.circular(borderRadius),
+    ),
+    Paint()..color = backgroundColor,
+  );
   if (!removePointyTriangle) {
     var arrowPath = Path();
     arrowPath.moveTo((textWidth + 40) / 2 - 15, textHeight + 20);
@@ -104,90 +98,30 @@ Future<BitmapDescriptor> createCustomMarkerBitmap(
 }
 
 class LabelMarker {
-  /// The text to be displayed on the marker
   final String label;
-
-  /// Uniquely identifies a [Marker].
   final MarkerId markerId;
-
-  /// Geographical location of the marker.
   final LatLng position;
-
-  /// Background color of the label marker.
   final Color backgroundColor;
-
-  /// TextStyle for the text to be displayed in the label marker.
   final TextStyle textStyle;
-
-  /// The opacity of the marker, between 0.0 and 1.0 inclusive.
-  ///
-  /// 0.0 means fully transparent, 1.0 means fully opaque.
   final double alpha;
-
-  /// The icon image point that will be placed at the [position] of the marker.
-  ///
-  /// The image point is specified in normalized coordinates: An anchor of
-  /// (0.0, 0.0) means the top left corner of the image. An anchor
-  /// of (1.0, 1.0) means the bottom right corner of the image.
   final Offset anchor;
-
-  /// True if the marker icon consumes tap events. If not, the map will perform
-  /// default tap handling by centering the map on the marker and displaying its
-  /// info window.
   final bool consumeTapEvents;
-
-  /// True if the marker is draggable by user touch events.
   final bool draggable;
-
-  /// True if the marker is rendered flatly against the surface of the Earth, so
-  /// that it will rotate and tilt along with map camera movements.
   final bool flat;
-
-  /// A description of the bitmap used to draw the marker icon.
   final BitmapDescriptor icon;
-
-  /// A Google Maps InfoWindow.
-  ///
-  /// The window is displayed when the marker is tapped.
   final InfoWindow infoWindow;
-
-  /// Rotation of the marker image in degrees clockwise from the [anchor] point.
   final double rotation;
-
-  /// True if the marker is visible.
   final bool visible;
-
-  /// The z-index of the marker, used to determine relative drawing order of
-  /// map overlays.
-  ///
-  /// Overlays are drawn in order of z-index, so that lower values means drawn
-  /// earlier, and thus appearing to be closer to the surface of the Earth.
   final double zIndex;
-
-  /// Callbacks to receive tap events for markers placed on this map.
   final VoidCallback? onTap;
-
-  /// Signature reporting the new [LatLng] at the start of a drag event.
   final ValueChanged<LatLng>? onDragStart;
-
-  /// Signature reporting the new [LatLng] at the end of a drag event.
   final ValueChanged<LatLng>? onDragEnd;
-
-  /// Signature reporting the new [LatLng] during the drag event.
   final ValueChanged<LatLng>? onDrag;
-
-  /// An option to remove pointy from label
   final bool removePointyTriangle;
 
-  /// Creates a marker with text label
-  ///
-  /// * Pass the [label] to be displayed on the marker
-  /// * Pass the [markerId] to be used as a key for the marker
-  /// * Pass the [position] to be used as the marker's position
-  /// * Optionally pass the [backgroundColor] to be used as the marker's background color
-  /// * Optionally pass the [textStyle] to be used as the marker's text style
-  /// * Optionally you could pass all the other parameters passed for a normal marker
-  ///
+  /// New: Allows customization of the border radius
+  final double borderRadius;
+
   LabelMarker({
     required this.label,
     required this.markerId,
@@ -214,5 +148,6 @@ class LabelMarker {
     this.onDragStart,
     this.onDragEnd,
     this.removePointyTriangle = false,
+    this.borderRadius = 10.0,
   });
 }

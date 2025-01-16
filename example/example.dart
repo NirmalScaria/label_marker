@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:label_marker/label_marker.dart';
@@ -56,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
           markers
               .addLabelMarker(LabelMarker(
             label: title,
+            borderRadius: 50,
             markerId: MarkerId(title),
             position: LatLng(lat, lng),
             backgroundColor: Colors.green,
