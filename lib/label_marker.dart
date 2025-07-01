@@ -2,9 +2,10 @@
 library label_marker;
 
 import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:ui' as ui;
 
 extension AddExtension on Set<Marker> {
   /// Add a LabelMarker to existing set of Markers
@@ -29,6 +30,7 @@ extension AddExtension on Set<Marker> {
       backgroundColor: labelMarker.backgroundColor,
       textStyle: labelMarker.textStyle,
       removePointyTriangle: labelMarker.removePointyTriangle,
+      borderRadius: labelMarker.borderRadius,
     ).then((value) {
       add(Marker(
           markerId: labelMarker.markerId,
@@ -58,6 +60,7 @@ Future<BitmapDescriptor> createCustomMarkerBitmap(
   required TextStyle textStyle,
   Color backgroundColor = Colors.blueAccent,
   bool removePointyTriangle = false,
+  double borderRadius = 10.0,
 }) async {
   TextSpan span = TextSpan(
     style: textStyle,
@@ -80,10 +83,10 @@ Future<BitmapDescriptor> createCustomMarkerBitmap(
   int textHeight = painter.height.toInt();
   canvas.drawRRect(
       RRect.fromLTRBAndCorners(0, 0, textWidth + 40, textHeight + 20,
-          bottomLeft: const Radius.circular(10),
-          bottomRight: const Radius.circular(10),
-          topLeft: const Radius.circular(10),
-          topRight: const Radius.circular(10)),
+          bottomLeft: Radius.circular(borderRadius),
+          bottomRight: Radius.circular(borderRadius),
+          topLeft: Radius.circular(borderRadius),
+          topRight: Radius.circular(borderRadius)),
       Paint()..color = backgroundColor);
   if (!removePointyTriangle) {
     var arrowPath = Path();
@@ -179,6 +182,9 @@ class LabelMarker {
   /// An option to remove pointy from label
   final bool removePointyTriangle;
 
+  /// Border radius for the label marker.
+  final double borderRadius;
+
   /// Creates a marker with text label
   ///
   /// * Pass the [label] to be displayed on the marker
@@ -214,5 +220,6 @@ class LabelMarker {
     this.onDragStart,
     this.onDragEnd,
     this.removePointyTriangle = false,
+    this.borderRadius = 10.0,
   });
 }
